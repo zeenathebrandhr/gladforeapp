@@ -1,0 +1,55 @@
+Project Goal & Context
+
+Develop the Minimum Viable Product (MVP) web application, named Gladfore, to digitize the onboarding and fertilizer credit process. This web app must serve the Admin, Agent, and Farmer roles, establish a shared component library for the future cross-platform mobile app, and adhere strictly to a Mobile-First design philosophy.
+
+Technology Stack & Architecture
+
+Frontend (Web): React with a robust framework (e.g., Next.js).
+Backend, Auth & Database: Supabase (PostgreSQL Database, Realtime, Authentication, and Edge Functions for API logic).
+Design & Logic: Use TypeScript for the frontend. All UI must be built with reusable, modular components to ensure portability to a future React Native mobile app. Business Logic must be isolated for cross-platform sharing.
+Core MVP User Stories (Must-Haves)
+The web app must implement the core features for all three roles, adhering to the rule that 50% down payment is the sole eligibility requirement.
+
+User Role:  Admin
+
+Feature : Data Upload & Management , Order Approval , Reporting
+
+Acceptance Criteria Key:
+
+1- Secure Supabase insert function for mass uploading the CSV list of qualified Farmers (Name, Phone, ID).
+
+2- A list view of pending orders. Admin views the order and the recorded 50% Down Payment, and can Approve or Reject the order.
+
+3- Basic dashboard showing a summary of "Total Down Payments Collected" and "Total Pending Debt.
+
+User role: Agent
+
+features: Secure Login & Profile, Farmer Lookup & Link, New Order Creation, Down Payment Recording
+
+Acceptance Criteria Key:
+
+1- Login via unique Agent ID/password (Supabase Auth).
+
+2- Search and link an existing Farmer by Phone Number/ID.
+
+3- A streamlined, vertical form to create an order, calculate the Total Cost, and display the required 50% Down Payment amount.
+
+4- A form to record the mandatory 50% down payment. Validation must strictly enforce that the recorded amount EXACLTY matches 50% of the total cost.
+
+user role: Farmer
+
+features: Farmer Login (Read-Only), Order & Repayment Status
+
+Acceptance criteria:
+
+1- Simple login using their registered Phone Number/ID (Supabase Auth/OTP).
+
+2- A list view of their current/past orders and the status of their Repayment Schedule (due dates for the remaining 50% balance).
+
+Design & Development Constraints
+
+Strict Mobile-First Design: All UI must be designed and developed for a mobile viewport first
+Use CSS Media Queries or component logic to progressively enhance the layout for tablet and desktop screens (desktop views are secondary).
+Prioritize large touch targets, vertical scrolling, and mobile-friendly navigation (e.g., a bottom navigation bar or hamburger menu).
+Logic Isolation & Reusability: The Business Logic (cost calculation, 50% payment validation, etc.) must be strictly isolated in a shared TypeScript library for direct reuse in the future React Native app.
+Supabase Implementation: Utilize Supabase for all data operations. Implement PostgreSQL Row-Level Security (RLS) to enforce user permissions (e.g., a Farmer only sees their own data; an Agent only sees their linked farmers).
