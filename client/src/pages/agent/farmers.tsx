@@ -13,12 +13,13 @@ export default function AgentFarmers() {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { data: { user } } = useQuery({
+  const authQuery = useQuery({
     queryKey: ['/api/auth/user'],
     queryFn: async () => {
       return await supabase.auth.getUser();
     },
   });
+  const user = (authQuery.data as any)?.data?.user ?? null;
 
   const { data: farmers, isLoading } = useQuery({
     queryKey: ['/api/farmers/search', searchQuery],

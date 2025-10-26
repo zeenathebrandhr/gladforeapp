@@ -33,12 +33,13 @@ export default function AgentNewOrder() {
   const [requiredDownPayment, setRequiredDownPayment] = useState(0);
   const [isDownPaymentValid, setIsDownPaymentValid] = useState(false);
 
-  const { data: { user } } = useQuery({
+  const authQuery = useQuery({
     queryKey: ['/api/auth/user'],
     queryFn: async () => {
       return await supabase.auth.getUser();
     },
   });
+  const user = (authQuery.data as any)?.data?.user ?? null;
 
   const { data: farmers } = useQuery({
     queryKey: ['/api/agent/farmers'],

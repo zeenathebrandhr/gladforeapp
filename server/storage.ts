@@ -22,14 +22,21 @@ export class MemStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    // The User model stores email and name (not username). Match by email
+    // for lookup to remain useful in this in-memory storage.
+    return Array.from(this.users.values()).find((user) => user.email === username);
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id };
+    // Ensure required User fields are present and provide sensible defaults
+    const user: User = {
+      ...insertUser,
+      id,
+      phone: (insertUser as any).phone ?? null,
+      agent_id: (insertUser as any).agent_id ?? null,
+      created_at: new Date(),
+    };
     this.users.set(id, user);
     return user;
   }
