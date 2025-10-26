@@ -20,9 +20,27 @@ export function log(message: string, source = "express") {
 }
 
 export async function setupVite(app: Express, server: Server) {
+  // Configure the Vite dev server options. When running behind a remote
+  // development proxy (GitHub.dev / Codespaces) the HMR client can end up
+  // with an undefined port which yields websocket URLs like
+  // wss://localhost:undefined. Force the HMR client to use wss and port 443
+  // by default, but allow overrides via environment variables.
   const serverOptions = {
     middlewareMode: true,
-    hmr: { server },
+    // host:true ensures Vite listens on all interfaces
+    host: true,
+    hmr: {
+      // attach to the existing http server so middleware mode works
+      server,
+      // prefer secure websockets when proxied
+      protocol: process.env.VITE_HMR_PROTOCOL || "wss",
+      // default to 443 (standard wss port) so the client doesn't receive
+      // an undefined port behind GitHub.dev. Allow override with env var.
+      clientPort: process.env.VITE_HMR_CLIENT_PORT
+        ? Number(process.env.VITE_HMR_CLIENT_PORT)
+        : 443,
+      host: process.env.VITE_HMR_HOST || undefined,
+    },
     allowedHosts: true as const,
   };
 

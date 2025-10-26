@@ -1,6 +1,8 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import 'dotenv/config';
+
 
 const app = express();
 
@@ -54,7 +56,10 @@ app.use((req, res, next) => {
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    throw err;
+    // Log the error but do not rethrow here because rethrowing will crash
+    // the entire server process. This middleware has already sent an
+    // appropriate response to the client.
+    log(err?.stack || err?.message || String(err));
   });
 
   // importantly only setup vite in development and after

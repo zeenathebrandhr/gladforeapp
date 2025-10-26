@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import { fileURLToPath } from "url";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
@@ -20,15 +21,18 @@ export default defineConfig({
       : []),
   ],
   resolve: {
+    // Use a reliable __dirname for Node ESM so paths resolve the same in
+    // local dev and CI/CD environments (Netlify, Codespaces, etc.)
     alias: {
-      "@": path.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+      "@": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "client", "src"),
+      "@shared": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "shared"),
+      "@assets": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "attached_assets"),
     },
   },
-  root: path.resolve(import.meta.dirname, "client"),
+  // set root relative to the project config using a stable dirname
+  root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "client"),
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    outDir: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "dist/public"),
     emptyOutDir: true,
   },
   server: {

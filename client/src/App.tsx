@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/app-layout";
 import NotFound from "@/pages/not-found";
 import LoginPage from "@/pages/login";
+import Landing from "@/pages/landing";
 
 // Admin pages
 import AdminDashboard from "@/pages/admin/dashboard";
@@ -29,7 +30,7 @@ function Router() {
       {/* Public routes */}
       <Route path="/login" component={LoginPage} />
       <Route path="/">
-        {() => <LoginPage />}
+        {() => <Landing />}
       </Route>
 
       {/* Admin routes */}
