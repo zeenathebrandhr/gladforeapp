@@ -58,19 +58,19 @@ export const payments = pgTable("payments", {
 // Zod schemas for validation
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
-  createdAt: true,
+  created_at: true,
 });
 
 export const insertFarmerSchema = createInsertSchema(farmers).omit({
   id: true,
-  createdAt: true,
+  created_at: true,
 });
 
 export const insertOrderSchema = createInsertSchema(orders).omit({
   id: true,
-  createdAt: true,
-  approvedAt: true,
-  approvedBy: true,
+  created_at: true,
+  approved_at: true,
+  approved_by: true,
 }).extend({
   quantity: z.coerce.number().positive("Quantity must be positive"),
   unitPrice: z.coerce.number().positive("Unit price must be positive"),
@@ -80,7 +80,7 @@ export const insertOrderSchema = createInsertSchema(orders).omit({
 
 export const insertPaymentSchema = createInsertSchema(payments).omit({
   id: true,
-  createdAt: true,
+  created_at: true,
 });
 
 // TypeScript types

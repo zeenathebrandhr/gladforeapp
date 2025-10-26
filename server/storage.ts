@@ -29,14 +29,16 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    // Ensure required User fields are present and provide sensible defaults
-    const user: User = {
-      ...insertUser,
+    // Ensure required User fields are present and provide sensible defaults.
+    // Use a type assertion to satisfy the `User` type — insertUser comes from
+    // external validation and should contain the required fields (name, email, role).
+    const user = {
+      ...(insertUser as any),
       id,
       phone: (insertUser as any).phone ?? null,
       agent_id: (insertUser as any).agent_id ?? null,
       created_at: new Date(),
-    };
+    } as User;
     this.users.set(id, user);
     return user;
   }
