@@ -20,40 +20,38 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import { fileURLToPath } from "url";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-var vite_config_default = defineConfig({
-  plugins: [
-    react(),
-    runtimeErrorOverlay(),
-    ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
-      await import("@replit/vite-plugin-cartographer").then(
-        (m) => m.cartographer()
-      ),
-      await import("@replit/vite-plugin-dev-banner").then(
-        (m) => m.devBanner()
-      )
-    ] : []
-  ],
-  resolve: {
-    // Use a reliable __dirname for Node ESM so paths resolve the same in
-    // local dev and CI/CD environments (Netlify, Codespaces, etc.)
-    alias: {
-      "@": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "client", "src"),
-      "@shared": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "shared"),
-      "@assets": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "attached_assets")
+var vite_config_default = defineConfig(async () => {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  return {
+    base: "./",
+    // ✅ This fixes 404s on Netlify by using relative asset paths
+    plugins: [
+      react(),
+      runtimeErrorOverlay(),
+      ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
+        (await import("@replit/vite-plugin-cartographer")).cartographer(),
+        (await import("@replit/vite-plugin-dev-banner")).devBanner()
+      ] : []
+    ],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "client", "src"),
+        "@shared": path.resolve(__dirname, "shared"),
+        "@assets": path.resolve(__dirname, "attached_assets")
+      }
+    },
+    root: path.resolve(__dirname, "client"),
+    build: {
+      outDir: path.resolve(__dirname, "dist/public"),
+      emptyOutDir: true
+    },
+    server: {
+      fs: {
+        strict: true,
+        deny: ["**/.*"]
+      }
     }
-  },
-  // set root relative to the project config using a stable dirname
-  root: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "client"),
-  build: {
-    outDir: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "dist/public"),
-    emptyOutDir: true
-  },
-  server: {
-    fs: {
-      strict: true,
-      deny: ["**/.*"]
-    }
-  }
+  };
 });
 
 // server/vite.ts
